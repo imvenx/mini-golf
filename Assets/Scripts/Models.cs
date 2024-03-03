@@ -1,3 +1,4 @@
+using ArcanepadSDK;
 using ArcanepadSDK.Models;
 
 public class RefreshGameStateEvent : ArcaneBaseEvent
@@ -37,9 +38,16 @@ public class GameEvent
 {
     public static string RefreshGameState = "RefreshGameState";
     public static string RefreshUIState = "RefreshUIState";
-    // public static string UIShowGameCover = "UIShowGameCover";
-    // public static string ChangeUIState = "ChangeUIState";
-    // public static string UIShowLoading = "UIShowLoading";
-    // public static string UIShowPlayerDisconnected = "UIShowPlayerDisconnected";
 
+}
+
+public class Player
+{
+    public ArcanePad pad;
+    public bool isReady = false;
+    public Player(ArcanePad pad)
+    {
+        this.pad = pad;
+
+    }
 }

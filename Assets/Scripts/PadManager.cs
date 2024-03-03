@@ -10,6 +10,8 @@ public class PadManager : MonoBehaviour
 {
     public Button StartGameMenuButton;
     public Button GoBackToCoverMenuButton;
+    public Button readyButton;
+    public Button waitButton;
     public Button CalibrateQuaternionButton;
     public TextMeshProUGUI LogsText;
     public GameObject CoverPad;
@@ -17,20 +19,21 @@ public class PadManager : MonoBehaviour
 
     async void Awake()
     {
+        RefreshPadUI(Global.gameState.uiState);
+
         Arcane.Init(new ArcaneInitParams(deviceType: ArcaneDeviceType.pad, padOrientation: AOrientation.Portrait));
 
         await Arcane.ArcaneClientInitialized();
 
         StartGameMenuButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
         GoBackToCoverMenuButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
+        readyButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Ready")));
+        waitButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Wait")));
         // CalibrateQuaternionButton.onClick.AddListener(() => Arcane.Pad.CalibrateQuaternion());
-
-        // Arcane.Msg.On("RefreshGameState", new Action<RefreshGameStateEvent>(OnRefreshGameState));
 
         Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
         {
             Global.gameState.uiState = e.uiState;
-            Arcane.Msg.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
 
             RefreshPadUI(Global.gameState.uiState);
         });

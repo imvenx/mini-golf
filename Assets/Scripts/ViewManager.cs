@@ -1,28 +1,49 @@
 using UnityEngine;
 using System.Collections.Generic;
+using ArcanepadSDK.Models;
+using System;
+using ArcanepadSDK;
 public class ViewManager : MonoBehaviour
 {
     public GameObject playerPrefab;
-    public List<Player> players = new List<Player>();
+    // public List<Player> players = new List<Player>();
     public GameObject GameCoverView;
     public GameObject SelectCourseView;
+    public static List<Player> players = new List<Player>();
+    public static bool inGame = false;
+    public SelectCourse selectCourseEl;
 
     async void Awake()
     {
+        RefreshUI(Global.gameState.uiState);
+
         DontDestroyOnLoad(this);
 
         Arcane.Init();
 
         var initialState = await Arcane.ArcaneClientInitialized();
 
-        // CREATE A PLAYER FOR EACH GAMEPAD THAT WAS CONNECTED BEFORE INITIALIZATION
-        // initialState.pads.ForEach(pad => createPlayer(pad));
+        initialState.pads.ForEach(pad =>
+        {
+            CreatePlayer(pad);
+        });
 
-        // // CREATE A PLAYER FOR EACH GAMEPAD THAT CONNECTS AFTER INITIALIZATION
-        // Arcane.Msg.On(AEventName.IframePadConnect, new Action<IframePadConnectEvent>(createPlayerIfDontExist));
+        Arcane.Msg.On(AEventName.IframePadConnect, (IframePadConnectEvent e) =>
+        {
+            var padExists = players.Find(p => p.pad.DeviceId == e.deviceId) != null;
+            if (padExists) return;
 
-        // // DESTROY PLAYER ON GAMEPAD DISCONNECT
-        // Arcane.Msg.On(AEventName.IframePadDisconnect, new Action<IframePadDisconnectEvent>(destroyPlayer));
+            CreatePlayer(new ArcanePad(e.deviceId, e.internalId, e.iframeId, true, e.user));
+        });
+
+        Arcane.Msg.On(AEventName.IframePadDisconnect, (IframePadDisconnectEvent e) =>
+        {
+            var disconectedPad = players.Find(p => p.pad.DeviceId == e.DeviceId);
+            if (disconectedPad == null) return;
+            players.Remove(disconectedPad);
+
+            selectCourseEl.RefreshConectedPlayersText();
+        });
 
         Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
         {
@@ -31,6 +52,26 @@ public class ViewManager : MonoBehaviour
 
             RefreshUI(Global.gameState.uiState);
         });
+    }
+
+    void CreatePlayer(ArcanePad pad)
+    {
+        var newPlayer = new Player(pad);
+        players.Add(newPlayer);
+        Arcane.Msg.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
+
+        pad.On("Ready", (ArcaneBaseEvent e) =>
+        {
+            newPlayer.isReady = true;
+            selectCourseEl.RefreshConectedPlayersText();
+        });
+        pad.On("Wait", (ArcaneBaseEvent e) =>
+        {
+            newPlayer.isReady = false;
+            selectCourseEl.RefreshConectedPlayersText();
+        });
+
+        selectCourseEl.RefreshConectedPlayersText();
     }
 
     void RefreshUI(UIState uiState)
