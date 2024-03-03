@@ -496,6 +496,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   playerPrefab: {fileID: 6904530073167183227, guid: 638e1981055993d4b84a35206ae1c5ce, type: 3}
   players: []
+  GameCoverView: {fileID: 1182238946}
+  SelectCourseView: {fileID: 682034644}
 --- !u!1 &682034644
 GameObject:
   m_ObjectHideFlags: 0
@@ -508,7 +510,7 @@ GameObject:
   - component: {fileID: 682034647}
   - component: {fileID: 682034646}
   m_Layer: 5
-  m_Name: GameSelection
+  m_Name: SelectCourse
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -904,7 +906,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Press Start On Your Gameapd
+  m_text: Press Start On Your Gamepad
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}

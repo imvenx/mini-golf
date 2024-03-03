@@ -1,5 +1,4 @@
 using System;
-using System.Reflection;
 using ArcanepadSDK.Models;
 using ArcanepadSDK.Types;
 using Newtonsoft.Json;
@@ -9,9 +8,12 @@ using UnityEngine.UI;
 
 public class PadManager : MonoBehaviour
 {
-    public Button StartGameMenu;
+    public Button StartGameMenuButton;
+    public Button GoBackToCoverMenuButton;
     public Button CalibrateQuaternionButton;
     public TextMeshProUGUI LogsText;
+    public GameObject CoverPad;
+    public GameObject SelectCoursePad;
 
     async void Awake()
     {
@@ -19,18 +21,50 @@ public class PadManager : MonoBehaviour
 
         await Arcane.ArcaneClientInitialized();
 
-        // ATTACK
-        StartGameMenu.onClick.AddListener(OnStartGameMenuButtonPress);
+        StartGameMenuButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
+        GoBackToCoverMenuButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
+        // CalibrateQuaternionButton.onClick.AddListener(() => Arcane.Pad.CalibrateQuaternion());
 
-        // LISTEN FOR AN EVENT SENT TO THIS PAD
-        // Arcane.Msg.On("TakeDamage", new Action<TakeDamageEvent>(TakeDamage));
+        // Arcane.Msg.On("RefreshGameState", new Action<RefreshGameStateEvent>(OnRefreshGameState));
 
-        // CALIBRATE ROTATION
-        CalibrateQuaternionButton.onClick.AddListener(() => Arcane.Pad.CalibrateQuaternion());
+        Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
+        {
+            Global.gameState.uiState = e.uiState;
+            Arcane.Msg.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
+
+            RefreshPadUI(Global.gameState.uiState);
+        });
+
     }
 
-    void OnStartGameMenuButtonPress()
+    // void OnRefreshGameState(RefreshGameStateEvent e)
+    // {
+    //     Global.gameState = e.gameState;
+
+    //     RefreshPadUI(Global.gameState.uiState);
+    // }
+
+
+    void RefreshPadUI(UIState uiState)
     {
-        Arcane.Msg.EmitToViews(new ArcaneBaseEvent("SelectCourse"));
+        switch (uiState)
+        {
+            case UIState.GameCover:
+                CoverPad.SetActive(true);
+                SelectCoursePad.SetActive(false);
+                break;
+
+            case UIState.SelectCourse:
+                CoverPad.SetActive(false);
+                SelectCoursePad.SetActive(true);
+
+                break;
+
+            case UIState.Loading:
+                break;
+
+            case UIState.PlayerDisconnected:
+                break;
+        }
     }
 }

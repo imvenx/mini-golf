@@ -1,22 +1,18 @@
 using UnityEngine;
 using System.Collections.Generic;
-using System.Linq;
-using ArcanepadSDK.Models;
-using ArcanepadSDK;
-using System;
 public class ViewManager : MonoBehaviour
 {
     public GameObject playerPrefab;
     public List<Player> players = new List<Player>();
+    public GameObject GameCoverView;
+    public GameObject SelectCourseView;
 
     async void Awake()
     {
-        DontDestroyOnLoad(transform.gameObject);
+        DontDestroyOnLoad(this);
 
-        // INITIALIZE CLIENT
         Arcane.Init();
 
-        // WAIT UNTIL CLIENT IS INITIALIZED
         var initialState = await Arcane.ArcaneClientInitialized();
 
         // CREATE A PLAYER FOR EACH GAMEPAD THAT WAS CONNECTED BEFORE INITIALIZATION
@@ -28,10 +24,35 @@ public class ViewManager : MonoBehaviour
         // // DESTROY PLAYER ON GAMEPAD DISCONNECT
         // Arcane.Msg.On(AEventName.IframePadDisconnect, new Action<IframePadDisconnectEvent>(destroyPlayer));
 
-        Arcane.Msg.On("SelectCourse", () =>
+        Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
         {
+            Global.gameState.uiState = e.uiState;
+            Arcane.Msg.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
 
+            RefreshUI(Global.gameState.uiState);
         });
+    }
+
+    void RefreshUI(UIState uiState)
+    {
+        switch (uiState)
+        {
+            case UIState.GameCover:
+                GameCoverView.SetActive(true);
+                SelectCourseView.SetActive(false);
+                break;
+
+            case UIState.SelectCourse:
+                GameCoverView.SetActive(false);
+                SelectCourseView.SetActive(true);
+                break;
+
+            case UIState.Loading:
+                break;
+
+            case UIState.PlayerDisconnected:
+                break;
+        }
     }
 
     // void createPlayerIfDontExist(IframePadConnectEvent e)
