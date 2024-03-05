@@ -7,7 +7,7 @@ using System.Linq;
 public class ViewManager : MonoBehaviour
 {
     public GameObject canvas;
-    public GameObject gameCoverPanel;
+    public static GameObject gameCoverPanel;
     public static SelectCourse selectCoursePanel;
     public GameObject playerPrefab;
     public static List<Player> players = new List<Player>();
@@ -83,7 +83,7 @@ public class ViewManager : MonoBehaviour
         selectCoursePanel.RefreshConectedPlayersText();
     }
 
-    void RefreshUI(UIState uiState)
+    public static void RefreshUI(UIState uiState)
     {
         Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
 
@@ -99,8 +99,8 @@ public class ViewManager : MonoBehaviour
                 selectCoursePanel.gameObject.SetActive(true);
                 break;
 
-            case UIState.Loading:
-                break;
+            // case UIState.Loading:
+            //     break;
 
             case UIState.PlayerDisconnected:
                 break;

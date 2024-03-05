@@ -81,8 +81,8 @@ public class PadManager : MonoBehaviour
 
                 break;
 
-            case UIState.Loading:
-                break;
+            // case UIState.Loading:
+            //     break;
 
             case UIState.PlayerDisconnected:
                 break;

@@ -1,3 +1,4 @@
+using System.Linq;
 using System.Threading.Tasks;
 using ArcanepadSDK.Models;
 using TMPro;
@@ -21,5 +22,11 @@ public class SelectCourse : MonoBehaviour
         }
 
         connectedPlayersText.text = connectedPlayers;
+
+        if (ViewManager.players.All(player => player.isReady))
+        {
+            connectedPlayersText.text = "Starting game...";
+            // ViewManager.RefreshUI(UIState.Loading);
+        }
     }
 }

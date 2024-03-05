@@ -31,7 +31,10 @@ public class Global
 
 public enum UIState
 {
-    GameCover, SelectCourse, Loading, PlayerDisconnected
+    GameCover,
+    SelectCourse,
+    //  Loading,
+    PlayerDisconnected
 }
 
 public class GameEvent
