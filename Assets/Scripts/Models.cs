@@ -40,14 +40,3 @@ public class GameEvent
     public static string RefreshUIState = "RefreshUIState";
 
 }
-
-public class Player
-{
-    public ArcanePad pad;
-    public bool isReady = false;
-    public Player(ArcanePad pad)
-    {
-        this.pad = pad;
-
-    }
-}

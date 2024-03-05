@@ -3830,8 +3830,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f2ccf7c94b34b478c3dd138634f161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
+  gameCoverPanel: {fileID: 0}
+  selectCoursePanel: {fileID: 0}
   playerPrefab: {fileID: 6904530073167183227, guid: 638e1981055993d4b84a35206ae1c5ce, type: 3}
-  players: []
 --- !u!4 &1717163420
 Transform:
   m_ObjectHideFlags: 0

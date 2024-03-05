@@ -479,7 +479,8 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 828008615}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &521963552
@@ -494,10 +495,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f2ccf7c94b34b478c3dd138634f161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  canvas: {fileID: 0}
+  gameCoverPanel: {fileID: 0}
   playerPrefab: {fileID: 6904530073167183227, guid: 638e1981055993d4b84a35206ae1c5ce, type: 3}
-  GameCoverView: {fileID: 1182238946}
-  SelectCourseView: {fileID: 682034644}
-  selectCourseEl: {fileID: 682034648}
 --- !u!1 &682034644
 GameObject:
   m_ObjectHideFlags: 0
@@ -511,7 +511,7 @@ GameObject:
   - component: {fileID: 682034646}
   - component: {fileID: 682034648}
   m_Layer: 5
-  m_Name: SelectCourse
+  m_Name: selectCoursePanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -695,7 +695,7 @@ GameObject:
   - component: {fileID: 810226532}
   - component: {fileID: 810226531}
   m_Layer: 5
-  m_Name: LoadingScreen
+  m_Name: loadingScreen
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -856,7 +856,7 @@ RectTransform:
   - {fileID: 1182238947}
   - {fileID: 682034645}
   - {fileID: 810226530}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 521963551}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -1101,7 +1101,7 @@ GameObject:
   - component: {fileID: 1182238949}
   - component: {fileID: 1182238948}
   m_Layer: 5
-  m_Name: GameCover
+  m_Name: gameCoverPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1508,7 +1508,6 @@ SceneRoots:
   m_Roots:
   - {fileID: 963194228}
   - {fileID: 705507995}
-  - {fileID: 828008615}
   - {fileID: 1235747688}
   - {fileID: 521963551}
   - {fileID: 452173562}
