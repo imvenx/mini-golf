@@ -6,13 +6,18 @@ using UnityEngine.UI;
 public class PadManager : MonoBehaviour
 {
     public GameObject canvas;
-    public Button StartSelectCourseButton;
-    public Button BackToCoverButton;
-    public Button ReadyButton;
-    public Button WaitButton;
     // public TextMeshProUGUI LogsText;
     public GameObject CoverPad;
+    public Button StartSelectCourseButton;
+
     public GameObject SelectCoursePad;
+    public Button ReadyButton;
+    public Button WaitButton;
+    public Button BackToCoverButton;
+
+    public GameObject GamePad;
+    public Button QuitGameButton;
+
 
     async void Awake()
     {
@@ -22,11 +27,13 @@ public class PadManager : MonoBehaviour
 
         CoverPad = canvas.transform.Find("CoverPad").gameObject;
         SelectCoursePad = canvas.transform.Find("SelectCoursePad").gameObject;
+        GamePad = canvas.transform.Find("GamePad").gameObject;
 
         StartSelectCourseButton = CoverPad.transform.Find("StartSelectCourse").GetComponent<Button>();
         BackToCoverButton = SelectCoursePad.transform.Find("BackToCover").GetComponent<Button>();
         ReadyButton = SelectCoursePad.transform.Find("Ready").GetComponent<Button>();
         WaitButton = SelectCoursePad.transform.Find("Wait").GetComponent<Button>();
+        QuitGameButton = GamePad.transform.Find("Quit").GetComponent<Button>();
 
         RefreshPadUI(Global.gameState.uiState);
 
@@ -36,6 +43,7 @@ public class PadManager : MonoBehaviour
 
         StartSelectCourseButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
         BackToCoverButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
+
         ReadyButton.onClick.AddListener(() =>
         {
             Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Ready"));
@@ -48,6 +56,8 @@ public class PadManager : MonoBehaviour
             ReadyButton.gameObject.SetActive(true);
             WaitButton.gameObject.SetActive(false);
         });
+
+        QuitGameButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
 
         Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
         {
@@ -72,13 +82,23 @@ public class PadManager : MonoBehaviour
         {
             case UIState.GameCover:
                 CoverPad.SetActive(true);
+
                 SelectCoursePad.SetActive(false);
+                GamePad.SetActive(false);
                 break;
 
             case UIState.SelectCourse:
-                CoverPad.SetActive(false);
                 SelectCoursePad.SetActive(true);
 
+                CoverPad.SetActive(false);
+                GamePad.SetActive(false);
+                break;
+
+            case UIState.InGame:
+                GamePad.SetActive(true);
+
+                CoverPad.SetActive(false);
+                SelectCoursePad.SetActive(false);
                 break;
 
             // case UIState.Loading:

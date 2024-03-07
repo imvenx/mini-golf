@@ -11,7 +11,7 @@ EditorBuildSettings:
   - enabled: 0
     path: Assets/Scenes-View/ViewScene-Demo.unity
     guid: 221b6237200a0a84493efbd7a35b9ab1
-  - enabled: 0
+  - enabled: 1
     path: Assets/Scenes-View/Course1-SkyField.unity
     guid: d86f8047f8362274e926277211727054
   - enabled: 1

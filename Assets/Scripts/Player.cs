@@ -1,3 +1,4 @@
+using System;
 using ArcanepadSDK;
 using ArcanepadSDK.Models;
 using TMPro;
@@ -22,12 +23,12 @@ public class Player : MonoBehaviour
             ViewManager.selectCoursePanel.RefreshConectedPlayersText();
         });
 
-        // pad.StartGetQuaternion();
-        // pad.OnGetQuaternion(new Action<GetQuaternionEvent>(RotatePlayer));
+        pad.StartGetQuaternion();
+        pad.OnGetQuaternion(new Action<GetQuaternionEvent>(RotatePlayer));
     }
 
-    // void RotatePlayer(GetQuaternionEvent e)
-    // {
-    //     transform.rotation = new Quaternion(e.x, e.y, e.z, e.w);
-    // }
+    void RotatePlayer(GetQuaternionEvent e)
+    {
+        transform.rotation = new Quaternion(e.x, e.y, e.z, e.w);
+    }
 }

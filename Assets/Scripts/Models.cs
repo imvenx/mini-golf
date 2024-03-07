@@ -34,7 +34,8 @@ public enum UIState
     GameCover,
     SelectCourse,
     //  Loading,
-    PlayerDisconnected
+    PlayerDisconnected,
+    InGame,
 }
 
 public class GameEvent
