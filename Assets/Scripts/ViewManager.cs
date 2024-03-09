@@ -110,7 +110,6 @@ public class ViewManager : MonoBehaviour
         {
             case UIState.GameCover:
 
-
                 if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
 
                 gameCoverPanel.SetActive(true);
