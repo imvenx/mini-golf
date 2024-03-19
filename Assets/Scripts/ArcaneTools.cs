@@ -5,61 +5,89 @@ using System.Linq;
 
 public class SceneBuildManager : EditorWindow
 {
-    private static List<SceneAsset> app1Scenes = new List<SceneAsset>();
-    private static List<SceneAsset> app2Scenes = new List<SceneAsset>();
+    private static List<SceneAsset> viewScenes = new List<SceneAsset>();
+    private static List<SceneAsset> padScenes = new List<SceneAsset>();
+
+    private const string ViewScenesKey = "ViewScenesPaths";
+    private const string PadScenesKey = "PadScenesPaths";
 
     [MenuItem("ArcaneTools/Scene Build Manager")]
     public static void ShowWindow()
     {
         GetWindow<SceneBuildManager>("Scene Build Manager");
+        LoadScenes();
+    }
+
+    private static void LoadScenes()
+    {
+        viewScenes = LoadScenesFromPrefs(ViewScenesKey);
+        padScenes = LoadScenesFromPrefs(PadScenesKey);
+    }
+
+    private static List<SceneAsset> LoadScenesFromPrefs(string key)
+    {
+        var paths = EditorPrefs.GetString(key, "").Split(';');
+        return paths.Where(path => !string.IsNullOrEmpty(path))
+                    .Select(path => AssetDatabase.LoadAssetAtPath<SceneAsset>(path))
+                    .ToList();
+    }
+
+    private static void SaveScenesToPrefs(string key, List<SceneAsset> scenes)
+    {
+        var paths = scenes.Where(scene => scene != null)
+                          .Select(scene => AssetDatabase.GetAssetPath(scene))
+                          .ToArray();
+        EditorPrefs.SetString(key, string.Join(";", paths));
     }
 
     void OnGUI()
     {
         GUILayout.Label("View Scenes", EditorStyles.boldLabel);
-        for (int i = 0; i < app1Scenes.Count; i++)
-        {
-            app1Scenes[i] = (SceneAsset)EditorGUILayout.ObjectField(app1Scenes[i], typeof(SceneAsset), false);
-        }
-
-        if (GUILayout.Button("Add Scene for View"))
-        {
-            app1Scenes.Add(null);
-        }
-
-        if (GUILayout.Button("Set Scenes for View"))
-        {
-            SetScenes(app1Scenes);
-        }
+        DrawScenes(ref viewScenes, ViewScenesKey);
 
         GUILayout.Space(20);
 
         GUILayout.Label("Pad Scenes", EditorStyles.boldLabel);
-        for (int i = 0; i < app2Scenes.Count; i++)
+        DrawScenes(ref padScenes, PadScenesKey);
+    }
+
+    void DrawScenes(ref List<SceneAsset> scenes, string prefsKey)
+    {
+        bool scenesUpdated = false;
+
+        for (int i = 0; i < scenes.Count; i++)
         {
-            app2Scenes[i] = (SceneAsset)EditorGUILayout.ObjectField(app2Scenes[i], typeof(SceneAsset), false);
+            var newScene = (SceneAsset)EditorGUILayout.ObjectField(scenes[i], typeof(SceneAsset), false);
+            if (newScene != scenes[i])
+            {
+                scenes[i] = newScene;
+                scenesUpdated = true;
+            }
         }
 
-        if (GUILayout.Button("Add Scene for Pad"))
+        if (GUILayout.Button("Add Scene"))
         {
-            app2Scenes.Add(null);
+            scenes.Add(null);
+            scenesUpdated = true;
         }
 
-        if (GUILayout.Button("Set Scenes for Pad"))
+        if (GUILayout.Button("Set Scenes"))
         {
-            SetScenes(app2Scenes);
+            SetScenes(scenes);
+        }
+
+        if (scenesUpdated)
+        {
+            SaveScenesToPrefs(prefsKey, scenes);
         }
     }
 
     private void SetScenes(List<SceneAsset> scenes)
     {
-        var scenePaths = scenes.Where(scene => scene != null).Select(scene => AssetDatabase.GetAssetPath(scene)).ToArray();
-        var editorBuildSettingsScenes = new EditorBuildSettingsScene[scenePaths.Length];
-
-        for (int i = 0; i < scenePaths.Length; i++)
-        {
-            editorBuildSettingsScenes[i] = new EditorBuildSettingsScene(scenePaths[i], true);
-        }
+        var scenePaths = scenes.Where(scene => scene != null)
+                               .Select(scene => AssetDatabase.GetAssetPath(scene))
+                               .ToArray();
+        var editorBuildSettingsScenes = scenePaths.Select(path => new EditorBuildSettingsScene(path, true)).ToArray();
 
         EditorBuildSettings.scenes = editorBuildSettingsScenes;
     }
