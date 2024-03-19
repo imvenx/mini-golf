@@ -50,6 +50,7 @@ public class PadManager : MonoBehaviour
             ReadyButton.gameObject.SetActive(false);
             WaitButton.gameObject.SetActive(true);
         });
+
         WaitButton.onClick.AddListener(() =>
         {
             Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Wait"));
@@ -57,7 +58,7 @@ public class PadManager : MonoBehaviour
             WaitButton.gameObject.SetActive(false);
         });
 
-        QuitGameButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
+        QuitGameButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
 
         Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
         {
@@ -78,6 +79,8 @@ public class PadManager : MonoBehaviour
 
     void RefreshPadUI(UIState uiState)
     {
+        Debug.Log("Refreshed Pad UI State:" + uiState.ToString());
+
         switch (uiState)
         {
             case UIState.GameCover:
@@ -95,6 +98,7 @@ public class PadManager : MonoBehaviour
                 break;
 
             case UIState.InGame:
+
                 GamePad.SetActive(true);
 
                 CoverPad.SetActive(false);

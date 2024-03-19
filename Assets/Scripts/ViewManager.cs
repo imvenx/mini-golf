@@ -27,6 +27,7 @@ public class ViewManager : MonoBehaviour
             return;
         }
 
+
         var arcaneLibraryPrefab = Resources.Load<GameObject>("ArcaneLibrary/Arcane_Library");
         GameObject arcaneLibraryInstance = Instantiate(arcaneLibraryPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
 
@@ -104,7 +105,6 @@ public class ViewManager : MonoBehaviour
     public static void RefreshUI(UIState uiState)
     {
         Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
-
 
         switch (uiState)
         {
