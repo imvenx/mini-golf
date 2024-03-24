@@ -6,15 +6,11 @@ using UnityEngine.UI;
 public class PadManager : MonoBehaviour
 {
     public GameObject canvas;
-    // public TextMeshProUGUI LogsText;
     public GameObject CoverPad;
-    public Button StartSelectCourseButton;
-
     public GameObject SelectCoursePad;
     public Button ReadyButton;
     public Button WaitButton;
     public Button BackToCoverButton;
-
     public GameObject GamePad;
     public Button QuitGameButton;
 
@@ -29,19 +25,19 @@ public class PadManager : MonoBehaviour
         SelectCoursePad = canvas.transform.Find("SelectCoursePad").gameObject;
         GamePad = canvas.transform.Find("GamePad").gameObject;
 
-        StartSelectCourseButton = CoverPad.transform.Find("StartSelectCourse").GetComponent<Button>();
         BackToCoverButton = SelectCoursePad.transform.Find("BackToCover").GetComponent<Button>();
         ReadyButton = SelectCoursePad.transform.Find("Ready").GetComponent<Button>();
         WaitButton = SelectCoursePad.transform.Find("Wait").GetComponent<Button>();
         QuitGameButton = GamePad.transform.Find("Quit").GetComponent<Button>();
 
-        RefreshPadUI(Global.gameState.uiState);
+        CoverPad.SetActive(true);
+
+        // RefreshPadUI(Global.gameState.uiState);
 
         Arcane.Init(new ArcaneInitParams(deviceType: ArcaneDeviceType.pad, padOrientation: AOrientation.Portrait));
 
         await Arcane.ArcaneClientInitialized();
 
-        StartSelectCourseButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
         BackToCoverButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
 
         ReadyButton.onClick.AddListener(() =>
@@ -62,9 +58,7 @@ public class PadManager : MonoBehaviour
 
         Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
         {
-            Global.gameState.uiState = e.uiState;
-
-            RefreshPadUI(Global.gameState.uiState);
+            Arcane.Msg.EmitToViews(new ArcaneBaseEvent("QuitLevel"));
         });
 
     }

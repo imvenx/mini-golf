@@ -9,59 +9,33 @@ public class ViewManager : MonoBehaviour
 {
     public static ViewManager viewManagerInstance;
     public GameObject canvas;
-    public static GameObject gameCoverPanel;
-    public static SelectCourse selectCoursePanel;
+    public static GameObject coverView;
+    public static SelectCourse selectLevelView;
     public GameObject playerPrefab;
     public static List<Player> players = new List<Player>();
 
     async void Awake()
     {
-        if (viewManagerInstance == null)
-        {
-            viewManagerInstance = this;
-            DontDestroyOnLoad(gameObject);
-        }
-        else if (viewManagerInstance != this)
-        {
-            Destroy(gameObject);
-            return;
-        }
-
-
-        var arcaneLibraryPrefab = Resources.Load<GameObject>("ArcaneLibrary/Arcane_Library");
-        GameObject arcaneLibraryInstance = Instantiate(arcaneLibraryPrefab, new Vector3(0, 0, 0), Quaternion.identity, transform);
-
         playerPrefab = Resources.Load<GameObject>("Player");
 
         canvas = GameObject.Find("Canvas");
-        gameCoverPanel = canvas.transform.Find("gameCoverPanel").gameObject;
-        selectCoursePanel = canvas.transform.Find("selectCoursePanel").GetComponent<SelectCourse>();
+        coverView = canvas.transform.Find("coverView").gameObject;
+        selectLevelView = canvas.transform.Find("selectLevelView").GetComponent<SelectCourse>();
 
-        RefreshUI(Global.gameState.uiState);
+        coverView.SetActive(true);
 
         Arcane.Init();
         var initialState = await Arcane.ArcaneClientInitialized();
 
-        initialState.pads.ForEach(pad =>
-        {
-            createPlayer(pad);
-        });
+        initialState.pads.ForEach(pad => createPlayer(pad));
+        Arcane.Msg.On(AEventName.IframePadConnect, (IframePadConnectEvent e) => createPlayerIfDontExist(e));
+        Arcane.Msg.On(AEventName.IframePadDisconnect, (IframePadDisconnectEvent e) => destroyPlayer(e));
 
-        Arcane.Msg.On(AEventName.IframePadConnect, (IframePadConnectEvent e) =>
-        {
-            createPlayerIfDontExist(e);
-        });
-
-        Arcane.Msg.On(AEventName.IframePadDisconnect, (IframePadDisconnectEvent e) =>
-        {
-            destroyPlayer(e);
-        });
-
-        Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
-        {
-            Global.gameState.uiState = e.uiState;
-            RefreshUI(Global.gameState.uiState);
-        });
+        // Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
+        // {
+        //     Global.gameState.uiState = e.uiState;
+        //     RefreshUI(Global.gameState.uiState);
+        // });
     }
 
     void createPlayerIfDontExist(IframePadConnectEvent e)
@@ -86,7 +60,7 @@ public class ViewManager : MonoBehaviour
         players.Add(playerComponent);
 
 
-        selectCoursePanel.RefreshConectedPlayersText();
+        selectLevelView.RefreshConectedPlayersText();
     }
 
     void destroyPlayer(IframePadDisconnectEvent e)
@@ -99,12 +73,12 @@ public class ViewManager : MonoBehaviour
         players.Remove(player);
         Destroy(player.gameObject);
 
-        selectCoursePanel.RefreshConectedPlayersText();
+        selectLevelView.RefreshConectedPlayersText();
     }
 
     public static void RefreshUI(UIState uiState)
     {
-        Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
+        Global.gameState.uiState = uiState;
 
         switch (uiState)
         {
@@ -112,16 +86,16 @@ public class ViewManager : MonoBehaviour
 
                 if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
 
-                gameCoverPanel.SetActive(true);
-                selectCoursePanel.gameObject.SetActive(false);
+                coverView.SetActive(true);
+                selectLevelView.gameObject.SetActive(false);
                 break;
 
             case UIState.SelectCourse:
 
                 if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
 
-                gameCoverPanel.SetActive(false);
-                selectCoursePanel.gameObject.SetActive(true);
+                coverView.SetActive(false);
+                selectLevelView.gameObject.SetActive(true);
                 break;
 
             case UIState.InGame:
@@ -135,6 +109,8 @@ public class ViewManager : MonoBehaviour
                 break;
 
         }
+
+        Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
     }
 }
 

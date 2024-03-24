@@ -28,7 +28,7 @@ public class SelectCourse : MonoBehaviour
         {
             connectedPlayersText.text = "Starting game...";
 
-            ViewManager.RefreshUI(UIState.InGame);
+            // ViewManager.RefreshUI(UIState.InGame);
         }
     }
 }

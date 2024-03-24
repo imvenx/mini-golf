@@ -15,12 +15,20 @@ public class Player : MonoBehaviour
         pad.On("Ready", (ArcaneBaseEvent e) =>
         {
             isReady = true;
-            ViewManager.selectCoursePanel.RefreshConectedPlayersText();
+            ViewManager.selectLevelView.RefreshConectedPlayersText();
         });
+
         pad.On("Wait", (ArcaneBaseEvent e) =>
         {
             isReady = false;
-            ViewManager.selectCoursePanel.RefreshConectedPlayersText();
+            ViewManager.selectLevelView.RefreshConectedPlayersText();
+        });
+
+        pad.On("QuitLevel", (ArcaneBaseEvent e) =>
+        {
+            isReady = false;
+            ViewManager.selectLevelView.RefreshConectedPlayersText();
+            // ViewManager.RefreshUI(UIState.GameCover);
         });
 
         pad.StartGetQuaternion();
