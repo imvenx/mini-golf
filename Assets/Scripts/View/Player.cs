@@ -8,28 +8,32 @@ public class Player : MonoBehaviour
 {
     public ArcanePad pad { get; private set; }
     public bool isReady { get; private set; } = false;
+
+    public delegate void PlayerReadyStateChangeHandler(Player player, bool isReady);
+    public static event PlayerReadyStateChangeHandler PlayerReadyStateChange;
+
     public void Initialize(ArcanePad pad)
     {
         this.pad = pad;
 
-        pad.On("Ready", (ArcaneBaseEvent e) =>
+        pad.On("PlayerReady", (ArcaneBaseEvent e) =>
         {
             isReady = true;
-            ViewManager.selectLevelView.RefreshConectedPlayersText();
+            PlayerReadyStateChange.Invoke(this, isReady);
         });
 
-        pad.On("Wait", (ArcaneBaseEvent e) =>
+        pad.On("PlayerWait", (ArcaneBaseEvent e) =>
         {
             isReady = false;
-            ViewManager.selectLevelView.RefreshConectedPlayersText();
+            PlayerReadyStateChange.Invoke(this, isReady);
         });
 
-        pad.On("QuitLevel", (ArcaneBaseEvent e) =>
-        {
-            isReady = false;
-            ViewManager.selectLevelView.RefreshConectedPlayersText();
-            // ViewManager.RefreshUI(UIState.GameCover);
-        });
+        // pad.On("QuitLevel", (ArcaneBaseEvent e) =>
+        // {
+        //     isReady = false;
+        //     ViewManager.selectLevelView.RefreshConectedPlayersText();
+        //     // ViewManager.RefreshUI(UIState.GameCover);
+        // });
 
         pad.StartGetQuaternion();
         pad.OnGetQuaternion(new Action<GetQuaternionEvent>(RotatePlayer));

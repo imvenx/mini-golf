@@ -136,7 +136,7 @@ GameObject:
   - component: {fileID: 182676654}
   - component: {fileID: 182676653}
   m_Layer: 5
-  m_Name: Wait
+  m_Name: WaitButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -587,8 +587,9 @@ GameObject:
   - component: {fileID: 686640984}
   - component: {fileID: 686640986}
   - component: {fileID: 686640985}
+  - component: {fileID: 686640987}
   m_Layer: 5
-  m_Name: SelectCoursePad
+  m_Name: SelectLevelPad
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -654,6 +655,21 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 686640983}
   m_CullTransparentMesh: 1
+--- !u!114 &686640987
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 686640983}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 387ef0440a867974185501573fa66f2d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ReadyButton: {fileID: 0}
+  WaitButton: {fileID: 0}
+  BackToCoverButton: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1427,7 +1443,7 @@ GameObject:
   - component: {fileID: 1398070473}
   - component: {fileID: 1398070472}
   m_Layer: 5
-  m_Name: BackToCover
+  m_Name: BackToCoverButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1558,7 +1574,7 @@ GameObject:
   - component: {fileID: 1832360846}
   - component: {fileID: 1832360845}
   m_Layer: 5
-  m_Name: Ready
+  m_Name: ReadyButton
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -135,7 +135,7 @@ GameObject:
   - component: {fileID: 69928034}
   - component: {fileID: 69928033}
   m_Layer: 5
-  m_Name: PlayerCount
+  m_Name: connectedPlayersText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -404,6 +404,7 @@ GameObject:
   - component: {fileID: 521963551}
   - component: {fileID: 521963552}
   - component: {fileID: 521963553}
+  - component: {fileID: 521963554}
   m_Layer: 0
   m_Name: VIEW_MANAGER
   m_TagString: Untagged
@@ -441,6 +442,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   canvas: {fileID: 0}
   playerPrefab: {fileID: 6904530073167183227, guid: 638e1981055993d4b84a35206ae1c5ce, type: 3}
+  levelLoaer: {fileID: 0}
 --- !u!114 &521963553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -451,6 +453,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 3adbe8eeafd1d5f4092d20c1fba34378, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &521963554
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521963549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 58e185af036e67c47b3fb570b96c40e1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &682034644
@@ -464,7 +478,7 @@ GameObject:
   - component: {fileID: 682034645}
   - component: {fileID: 682034647}
   - component: {fileID: 682034646}
-  - component: {fileID: 682034648}
+  - component: {fileID: 682034649}
   m_Layer: 5
   m_Name: selectLevelView
   m_TagString: Untagged
@@ -531,7 +545,7 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 682034644}
   m_CullTransparentMesh: 1
---- !u!114 &682034648
+--- !u!114 &682034649
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -540,10 +554,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 682034644}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c1011890fd8a4e9439fe88bbcdb3d72f, type: 3}
+  m_Script: {fileID: 11500000, guid: d9a54e56690eb2440b549c4599f04b2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  connectedPlayersText: {fileID: 69928033}
+  connectedPlayersText: {fileID: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -1348,7 +1362,7 @@ GameObject:
   - component: {fileID: 1269548960}
   - component: {fileID: 1269548959}
   m_Layer: 5
-  m_Name: CourseName
+  m_Name: courseName
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

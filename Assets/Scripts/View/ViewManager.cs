@@ -9,20 +9,23 @@ public class ViewManager : MonoBehaviour
 {
     public static ViewManager viewManagerInstance;
     public GameObject canvas;
-    public static GameObject coverView;
-    public static SelectCourse selectLevelView;
+    public static CoverView coverView;
+    public static SelectLevelView selectLevelView;
     public GameObject playerPrefab;
     public static List<Player> players = new List<Player>();
+    public LevelLoader levelLoaer;
 
     async void Awake()
     {
         playerPrefab = Resources.Load<GameObject>("Player");
 
         canvas = GameObject.Find("Canvas");
-        coverView = canvas.transform.Find("coverView").gameObject;
-        selectLevelView = canvas.transform.Find("selectLevelView").GetComponent<SelectCourse>();
+        coverView = canvas.transform.Find("coverView").GetComponent<CoverView>();
+        selectLevelView = canvas.transform.Find("selectLevelView").GetComponent<SelectLevelView>();
 
-        coverView.SetActive(true);
+        levelLoaer = transform.GetComponent<LevelLoader>();
+
+        coverView.gameObject.SetActive(true);
 
         Arcane.Init();
         var initialState = await Arcane.ArcaneClientInitialized();
@@ -36,7 +39,23 @@ public class ViewManager : MonoBehaviour
         //     Global.gameState.uiState = e.uiState;
         //     RefreshUI(Global.gameState.uiState);
         // });
+
+        selectLevelView.BackToCoverButtonPressed += OnBackToCoverButtonPressed;
+        coverView.CoverStartButtonPressed += OnCoverStartButtonPressed;
+
     }
+
+    private void OnCoverStartButtonPressed()
+    {
+        RefreshUI(UIState.SelectLevelView);
+    }
+
+
+    private void OnBackToCoverButtonPressed()
+    {
+        RefreshUI(UIState.CoverView);
+    }
+
 
     void createPlayerIfDontExist(IframePadConnectEvent e)
     {
@@ -58,9 +77,6 @@ public class ViewManager : MonoBehaviour
         playerComponent.Initialize(pad);
 
         players.Add(playerComponent);
-
-
-        selectLevelView.RefreshConectedPlayersText();
     }
 
     void destroyPlayer(IframePadDisconnectEvent e)
@@ -72,30 +88,31 @@ public class ViewManager : MonoBehaviour
         player.pad.Dispose();
         players.Remove(player);
         Destroy(player.gameObject);
-
-        selectLevelView.RefreshConectedPlayersText();
     }
 
-    public static void RefreshUI(UIState uiState)
+    private static void RefreshUI(UIState uiState)
     {
         Global.gameState.uiState = uiState;
+        Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
 
         switch (uiState)
         {
-            case UIState.GameCover:
+            case UIState.CoverView:
 
                 if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
 
-                coverView.SetActive(true);
+                coverView.gameObject.SetActive(true);
                 selectLevelView.gameObject.SetActive(false);
+
                 break;
 
-            case UIState.SelectCourse:
+            case UIState.SelectLevelView:
 
                 if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
 
-                coverView.SetActive(false);
+                coverView.gameObject.SetActive(false);
                 selectLevelView.gameObject.SetActive(true);
+
                 break;
 
             case UIState.InGame:
@@ -110,7 +127,6 @@ public class ViewManager : MonoBehaviour
 
         }
 
-        Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
     }
 }
 

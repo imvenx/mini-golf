@@ -1,3 +1,4 @@
+using System;
 using ArcanepadSDK.Models;
 using ArcanepadSDK.Types;
 using UnityEngine;
@@ -22,13 +23,13 @@ public class PadManager : MonoBehaviour
         canvas = GameObject.Find("Canvas");
 
         CoverPad = canvas.transform.Find("CoverPad").gameObject;
-        SelectCoursePad = canvas.transform.Find("SelectCoursePad").gameObject;
+        SelectCoursePad = canvas.transform.Find("SelectLevelPad").gameObject;
         GamePad = canvas.transform.Find("GamePad").gameObject;
 
-        BackToCoverButton = SelectCoursePad.transform.Find("BackToCover").GetComponent<Button>();
-        ReadyButton = SelectCoursePad.transform.Find("Ready").GetComponent<Button>();
-        WaitButton = SelectCoursePad.transform.Find("Wait").GetComponent<Button>();
-        QuitGameButton = GamePad.transform.Find("Quit").GetComponent<Button>();
+        // BackToCoverButton = SelectCoursePad.transform.Find("BackToCover").GetComponent<Button>();
+        // ReadyButton = SelectCoursePad.transform.Find("Ready").GetComponent<Button>();
+        // WaitButton = SelectCoursePad.transform.Find("Wait").GetComponent<Button>();
+        // QuitGameButton = GamePad.transform.Find("Quit").GetComponent<Button>();
 
         CoverPad.SetActive(true);
 
@@ -38,28 +39,30 @@ public class PadManager : MonoBehaviour
 
         await Arcane.ArcaneClientInitialized();
 
-        BackToCoverButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
+        Arcane.Msg.On("RefreshUIState", (RefreshUIStateEvent e) => RefreshPadUI(e.uiState));
 
-        ReadyButton.onClick.AddListener(() =>
-        {
-            Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Ready"));
-            ReadyButton.gameObject.SetActive(false);
-            WaitButton.gameObject.SetActive(true);
-        });
+        // BackToCoverButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.GameCover)));
 
-        WaitButton.onClick.AddListener(() =>
-        {
-            Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Wait"));
-            ReadyButton.gameObject.SetActive(true);
-            WaitButton.gameObject.SetActive(false);
-        });
+        // ReadyButton.onClick.AddListener(() =>
+        // {
+        //     Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Ready"));
+        //     ReadyButton.gameObject.SetActive(false);
+        //     WaitButton.gameObject.SetActive(true);
+        // });
 
-        QuitGameButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
+        // WaitButton.onClick.AddListener(() =>
+        // {
+        //     Arcane.Msg.EmitToViews(new ArcaneBaseEvent("Wait"));
+        //     ReadyButton.gameObject.SetActive(true);
+        //     WaitButton.gameObject.SetActive(false);
+        // });
 
-        Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
-        {
-            Arcane.Msg.EmitToViews(new ArcaneBaseEvent("QuitLevel"));
-        });
+        // QuitGameButton.onClick.AddListener(() => Arcane.Msg.EmitToViews(new RefreshUIStateEvent(UIState.SelectCourse)));
+
+        // Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
+        // {
+        //     Arcane.Msg.EmitToViews(new ArcaneBaseEvent("QuitLevel"));
+        // });
 
     }
 
@@ -77,14 +80,14 @@ public class PadManager : MonoBehaviour
 
         switch (uiState)
         {
-            case UIState.GameCover:
+            case UIState.CoverView:
                 CoverPad.SetActive(true);
 
                 SelectCoursePad.SetActive(false);
                 GamePad.SetActive(false);
                 break;
 
-            case UIState.SelectCourse:
+            case UIState.SelectLevelView:
                 SelectCoursePad.SetActive(true);
 
                 CoverPad.SetActive(false);

@@ -21,7 +21,7 @@ public class RefreshUIStateEvent : ArcaneBaseEvent
 
 public class GameState
 {
-    public UIState uiState = UIState.GameCover;
+    public UIState uiState = UIState.CoverView;
 }
 
 public class Global
@@ -31,8 +31,8 @@ public class Global
 
 public enum UIState
 {
-    GameCover,
-    SelectCourse,
+    CoverView,
+    SelectLevelView,
     //  Loading,
     PlayerDisconnected,
     InGame,
