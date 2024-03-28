@@ -12,7 +12,9 @@ public class SelectLevelView : MonoBehaviour
     public TextMeshProUGUI connectedPlayersText;
 
     public delegate void BackToCoverButtonPressHandler();
-    public event BackToCoverButtonPressHandler BackToCoverButtonPressed;
+    public event BackToCoverButtonPressHandler backToCoverButtonPressed;
+    public delegate void AllPlayersReady();
+    public event AllPlayersReady allPlayersReady;
 
     void Awake()
     {
@@ -43,7 +45,7 @@ public class SelectLevelView : MonoBehaviour
 
     void OnBackToCoverButtonPress(ArcaneBaseEvent e)
     {
-        BackToCoverButtonPressed.Invoke();
+        backToCoverButtonPressed.Invoke();
     }
 
     private void RefreshConectedPlayersText()
@@ -60,6 +62,8 @@ public class SelectLevelView : MonoBehaviour
         if (ViewManager.players.All(player => player.isReady))
         {
             Debug.Log("Starting game...");
+
+            allPlayersReady.Invoke();
             // connectedPlayersText.text = "Starting game...";
             // ViewManager.RefreshUI(UIState.InGame);
         }

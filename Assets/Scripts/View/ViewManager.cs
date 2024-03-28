@@ -7,13 +7,14 @@ using System.Linq;
 using UnityEngine.SceneManagement;
 public class ViewManager : MonoBehaviour
 {
-    public static ViewManager viewManagerInstance;
-    public GameObject canvas;
-    public static CoverView coverView;
-    public static SelectLevelView selectLevelView;
-    public GameObject playerPrefab;
+    private static ViewManager viewManagerInstance;
+    private GameObject canvas;
+    private static CoverView coverView;
+    private static SelectLevelView selectLevelView;
+    private GameObject playerPrefab;
     public static List<Player> players = new List<Player>();
-    public LevelLoader levelLoaer;
+    private LevelLoader levelLoader;
+    private GameView gameView;
 
     async void Awake()
     {
@@ -22,8 +23,9 @@ public class ViewManager : MonoBehaviour
         canvas = GameObject.Find("Canvas");
         coverView = canvas.transform.Find("coverView").GetComponent<CoverView>();
         selectLevelView = canvas.transform.Find("selectLevelView").GetComponent<SelectLevelView>();
+        gameView = GetComponent<GameView>();
 
-        levelLoaer = transform.GetComponent<LevelLoader>();
+        levelLoader = transform.GetComponent<LevelLoader>();
 
         coverView.gameObject.SetActive(true);
 
@@ -40,10 +42,26 @@ public class ViewManager : MonoBehaviour
         //     RefreshUI(Global.gameState.uiState);
         // });
 
-        selectLevelView.BackToCoverButtonPressed += OnBackToCoverButtonPressed;
+        selectLevelView.backToCoverButtonPressed += OnBackToCoverButtonPressed;
         coverView.CoverStartButtonPressed += OnCoverStartButtonPressed;
+        selectLevelView.allPlayersReady += OnAllPlayersReady;
+        gameView.QuitGameButtonPress += OnQuitGameButtonPress;
 
     }
+
+    private void OnQuitGameButtonPress()
+    {
+        RefreshUI(UIState.SelectLevelView);
+        levelLoader.UnloadLevel("Level_1");
+    }
+
+
+    private void OnAllPlayersReady()
+    {
+        RefreshUI(UIState.InGame);
+        levelLoader.LoadLevel("Level_1");
+    }
+
 
     private void OnCoverStartButtonPressed()
     {
@@ -90,7 +108,7 @@ public class ViewManager : MonoBehaviour
         Destroy(player.gameObject);
     }
 
-    private static void RefreshUI(UIState uiState)
+    private void RefreshUI(UIState uiState)
     {
         Global.gameState.uiState = uiState;
         Arcane.Msg?.EmitToPads(new RefreshUIStateEvent(Global.gameState.uiState));
@@ -99,8 +117,6 @@ public class ViewManager : MonoBehaviour
         {
             case UIState.CoverView:
 
-                if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
-
                 coverView.gameObject.SetActive(true);
                 selectLevelView.gameObject.SetActive(false);
 
@@ -108,15 +124,14 @@ public class ViewManager : MonoBehaviour
 
             case UIState.SelectLevelView:
 
-                if (SceneManager.GetActiveScene().name != "MainMenu") SceneManager.LoadScene("MainMenu");
-
                 coverView.gameObject.SetActive(false);
                 selectLevelView.gameObject.SetActive(true);
 
                 break;
 
             case UIState.InGame:
-                SceneManager.LoadScene("Course1-SkyField");
+
+                selectLevelView.gameObject.SetActive(false);
                 break;
 
             // case UIState.Loading:

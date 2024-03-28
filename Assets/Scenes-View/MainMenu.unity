@@ -405,6 +405,7 @@ GameObject:
   - component: {fileID: 521963552}
   - component: {fileID: 521963553}
   - component: {fileID: 521963554}
+  - component: {fileID: 521963555}
   m_Layer: 0
   m_Name: VIEW_MANAGER
   m_TagString: Untagged
@@ -440,9 +441,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 41f2ccf7c94b34b478c3dd138634f161, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  canvas: {fileID: 0}
-  playerPrefab: {fileID: 6904530073167183227, guid: 638e1981055993d4b84a35206ae1c5ce, type: 3}
-  levelLoaer: {fileID: 0}
 --- !u!114 &521963553
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -465,6 +463,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 58e185af036e67c47b3fb570b96c40e1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &521963555
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 521963549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ef88d486105f624c800f865821a0a5f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &682034644

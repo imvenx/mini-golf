@@ -5,46 +5,70 @@ using UnityEngine.SceneManagement;
 public class LevelLoader : MonoBehaviour
 {
     private GameObject loadingScreen;
+    private float minimumLoadingTime = 1f;
 
     void Awake()
     {
         loadingScreen = GameObject.Find("loadingScreen");
     }
 
-    public IEnumerator LoadLevel(string levelName)
+    public void LoadLevel(string levelName)
     {
-        loadingScreen.SetActive(true);
+        StartCoroutine(LoadLevelAsync(levelName));
+    }
 
-        AsyncOperation asyncLoad = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+    public void UnloadLevel(string levelName)
+    {
+        StartCoroutine(UnloadLevelAsync(levelName));
+    }
 
-        while (!asyncLoad.isDone)
+    private IEnumerator LoadLevelAsync(string levelName)
+    {
+        ShowLoadingView(true);
+
+        float startTime = Time.time;
+
+        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+        while (!loadOperation.isDone)
+        {
+            // Optionally, update loading progress here
+            yield return null;
+        }
+
+        while (Time.time - startTime < minimumLoadingTime)
         {
             yield return null;
         }
 
-        loadingScreen.SetActive(false);
+        ShowLoadingView(false);
     }
 
-    public IEnumerator UnloadLevel(string levelName)
+    private IEnumerator UnloadLevelAsync(string levelName)
     {
-        if (SceneManager.GetSceneByName(levelName).isLoaded)
+        ShowLoadingView(true);
+
+        float startTime = Time.time;
+
+        AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(levelName);
+        while (!unloadOperation.isDone)
         {
-            loadingScreen.SetActive(true);
-
-            AsyncOperation asyncUnload = SceneManager.UnloadSceneAsync(levelName);
-
-            while (!asyncUnload.isDone)
-            {
-                yield return null;
-            }
-
-            loadingScreen.SetActive(false);
+            // Optionally, update loading progress here
+            yield return null;
         }
-        else
+
+        while (Time.time - startTime < minimumLoadingTime)
         {
-            Debug.LogWarning($"Attempted to unload {levelName}, but it is not currently loaded.");
+            yield return null;
         }
+
+        ShowLoadingView(false);
     }
 
-
+    private void ShowLoadingView(bool show)
+    {
+        if (loadingScreen != null)
+        {
+            loadingScreen.SetActive(show);
+        }
+    }
 }
