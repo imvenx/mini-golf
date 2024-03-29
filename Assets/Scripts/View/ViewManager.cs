@@ -1,10 +1,9 @@
 using UnityEngine;
 using System.Collections.Generic;
 using ArcanepadSDK.Models;
-using System;
 using ArcanepadSDK;
 using System.Linq;
-using UnityEngine.SceneManagement;
+
 public class ViewManager : MonoBehaviour
 {
     private static ViewManager viewManagerInstance;
@@ -52,7 +51,7 @@ public class ViewManager : MonoBehaviour
     private void OnQuitGameButtonPress()
     {
         RefreshUI(UIState.SelectLevelView);
-        levelLoader.UnloadLevel("Level_1");
+        levelLoader.UnloadLevel();
     }
 
 

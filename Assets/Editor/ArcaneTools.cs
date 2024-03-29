@@ -11,19 +11,10 @@ public class SceneBuildManager : EditorWindow
     private const string ViewScenesKey = "ViewScenesPaths";
     private const string PadScenesKey = "PadScenesPaths";
 
-    static SceneBuildManager()
+    [InitializeOnLoadMethod]
+    private static void InitializeOnEditorLoad()
     {
-        // Subscribe to the play mode state change event
-        EditorApplication.playModeStateChanged += OnPlayModeStateChanged;
-    }
-
-    private static void OnPlayModeStateChanged(PlayModeStateChange state)
-    {
-        // When exiting play mode, reload the scenes to refresh the editor window
-        if (state == PlayModeStateChange.EnteredEditMode || state == PlayModeStateChange.ExitingPlayMode)
-        {
-            LoadScenes();
-        }
+        LoadScenes();
     }
 
     [MenuItem("ArcaneTools/Scene Build Manager")]

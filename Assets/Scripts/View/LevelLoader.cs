@@ -5,11 +5,12 @@ using UnityEngine.SceneManagement;
 public class LevelLoader : MonoBehaviour
 {
     private GameObject loadingScreen;
-    private float minimumLoadingTime = 1f;
+    private float minimumLoadingTimeSeconds = 1f;
+    private string currentLevel;
 
     void Awake()
     {
-        loadingScreen = GameObject.Find("loadingScreen");
+        loadingScreen = GameObject.Find("Canvas").transform.Find("loadingScreen").gameObject;
     }
 
     public void LoadLevel(string levelName)
@@ -17,58 +18,51 @@ public class LevelLoader : MonoBehaviour
         StartCoroutine(LoadLevelAsync(levelName));
     }
 
-    public void UnloadLevel(string levelName)
+    public void UnloadLevel()
     {
-        StartCoroutine(UnloadLevelAsync(levelName));
+        StartCoroutine(UnloadLevelAsync());
     }
 
     private IEnumerator LoadLevelAsync(string levelName)
     {
         ShowLoadingView(true);
 
-        float startTime = Time.time;
+        var startTime = Time.time;
 
-        AsyncOperation loadOperation = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
-        while (!loadOperation.isDone)
-        {
-            // Optionally, update loading progress here
-            yield return null;
-        }
+        var loadOperation = SceneManager.LoadSceneAsync(levelName, LoadSceneMode.Additive);
+        loadOperation.allowSceneActivation = false;
 
-        while (Time.time - startTime < minimumLoadingTime)
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => loadOperation.progress >= 0.9f && (Time.time - startTime) >= minimumLoadingTimeSeconds);
+
+        loadOperation.allowSceneActivation = true;
+
+        yield return new WaitUntil(() => loadOperation.isDone);
+
+        currentLevel = levelName;
 
         ShowLoadingView(false);
     }
 
-    private IEnumerator UnloadLevelAsync(string levelName)
+    private IEnumerator UnloadLevelAsync()
     {
+        if (string.IsNullOrEmpty(currentLevel)) yield return null;
+
         ShowLoadingView(true);
 
-        float startTime = Time.time;
+        var startTime = Time.time;
 
-        AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(levelName);
-        while (!unloadOperation.isDone)
-        {
-            // Optionally, update loading progress here
-            yield return null;
-        }
+        AsyncOperation unloadOperation = SceneManager.UnloadSceneAsync(currentLevel);
 
-        while (Time.time - startTime < minimumLoadingTime)
-        {
-            yield return null;
-        }
+        yield return new WaitUntil(() => unloadOperation.isDone && (Time.time - startTime) >= minimumLoadingTimeSeconds);
+
+        currentLevel = "";
 
         ShowLoadingView(false);
     }
+
 
     private void ShowLoadingView(bool show)
     {
-        if (loadingScreen != null)
-        {
-            loadingScreen.SetActive(show);
-        }
+        loadingScreen.SetActive(show);
     }
 }
