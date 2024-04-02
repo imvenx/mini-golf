@@ -6,7 +6,6 @@ using System.Linq;
 
 public class ViewManager : MonoBehaviour
 {
-    private static ViewManager viewManagerInstance;
     private GameObject canvas;
     private static CoverView coverView;
     private static SelectLevelView selectLevelView;
@@ -35,17 +34,10 @@ public class ViewManager : MonoBehaviour
         Arcane.Msg.On(AEventName.IframePadConnect, (IframePadConnectEvent e) => createPlayerIfDontExist(e));
         Arcane.Msg.On(AEventName.IframePadDisconnect, (IframePadDisconnectEvent e) => destroyPlayer(e));
 
-        // Arcane.Msg.On(GameEvent.RefreshUIState, (RefreshUIStateEvent e) =>
-        // {
-        //     Global.gameState.uiState = e.uiState;
-        //     RefreshUI(Global.gameState.uiState);
-        // });
-
         selectLevelView.backToCoverButtonPressed += OnBackToCoverButtonPressed;
         coverView.CoverStartButtonPressed += OnCoverStartButtonPressed;
         selectLevelView.allPlayersReady += OnAllPlayersReady;
         gameView.QuitGameButtonPress += OnQuitGameButtonPress;
-
     }
 
     private void OnQuitGameButtonPress()
@@ -54,25 +46,21 @@ public class ViewManager : MonoBehaviour
         levelLoader.UnloadLevel();
     }
 
-
     private void OnAllPlayersReady()
     {
         RefreshUI(UIState.InGame);
         levelLoader.LoadLevel("Level_1");
     }
 
-
     private void OnCoverStartButtonPressed()
     {
         RefreshUI(UIState.SelectLevelView);
     }
 
-
     private void OnBackToCoverButtonPressed()
     {
         RefreshUI(UIState.CoverView);
     }
-
 
     void createPlayerIfDontExist(IframePadConnectEvent e)
     {

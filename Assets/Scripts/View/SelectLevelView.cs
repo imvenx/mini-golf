@@ -34,15 +34,6 @@ public class SelectLevelView : MonoBehaviour
         RefreshConectedPlayersText();
     }
 
-    void OnEnable()
-    {
-        // RefreshConectedPlayersText();
-    }
-
-    void OnDisable()
-    {
-    }
-
     void OnBackToCoverButtonPress(ArcaneBaseEvent e)
     {
         backToCoverButtonPressed.Invoke();
