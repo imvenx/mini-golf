@@ -8,6 +8,8 @@ public class GamePad : MonoBehaviour
 
     void Awake()
     {
+        QuitButton = transform.Find("QuitButton").GetComponent<Button>();
+
         QuitButton.onClick.AddListener(() =>
         {
             Arcane.Msg.EmitToViews(new ArcaneBaseEvent("QuitGameButtonPress"));
