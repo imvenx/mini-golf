@@ -7,31 +7,37 @@ using UnityEngine.UI;
 public class PadManager : MonoBehaviour
 {
     public GameObject canvas;
+    public GameObject Pads;
     public GameObject CoverPad;
-    public GameObject SelectCoursePad;
+    public GameObject SelectLevelPad;
+    public GameObject GamePad;
+
     public Button ReadyButton;
     public Button WaitButton;
     public Button BackToCoverButton;
-    public GameObject GamePad;
     public Button QuitGameButton;
-
-
-    async void Awake()
+    private GameObject currentActivePad;
+    async void Start()
     {
         DontDestroyOnLoad(this);
 
         canvas = GameObject.Find("Canvas");
 
-        CoverPad = canvas.transform.Find("CoverPad").gameObject;
-        SelectCoursePad = canvas.transform.Find("SelectLevelPad").gameObject;
-        GamePad = canvas.transform.Find("GamePad").gameObject;
+        Pads = canvas.transform.Find("Pads").gameObject;
+        CoverPad = Pads.transform.Find("CoverPad").gameObject;
+        SelectLevelPad = Pads.transform.Find("SelectLevelPad").gameObject;
+        GamePad = Pads.transform.Find("GamePad").gameObject;
+
+        CoverPad.gameObject.SetActive(true);
+        currentActivePad = CoverPad;
+
+        SelectLevelPad.SetActive(false);
+        GamePad.SetActive(false);
 
         // BackToCoverButton = SelectCoursePad.transform.Find("BackToCover").GetComponent<Button>();
         // ReadyButton = SelectCoursePad.transform.Find("Ready").GetComponent<Button>();
         // WaitButton = SelectCoursePad.transform.Find("Wait").GetComponent<Button>();
         // QuitGameButton = GamePad.transform.Find("Quit").GetComponent<Button>();
-
-        CoverPad.SetActive(true);
 
         // RefreshPadUI(Global.gameState.uiState);
 
@@ -74,6 +80,7 @@ public class PadManager : MonoBehaviour
     // }
 
 
+
     void RefreshPadUI(UIState uiState)
     {
         Debug.Log("Refreshed Pad UI State:" + uiState.ToString());
@@ -81,25 +88,19 @@ public class PadManager : MonoBehaviour
         switch (uiState)
         {
             case UIState.CoverView:
-                CoverPad.SetActive(true);
 
-                SelectCoursePad.SetActive(false);
-                GamePad.SetActive(false);
+                SwitchActivePad(CoverPad);
                 break;
 
             case UIState.SelectLevelView:
-                SelectCoursePad.SetActive(true);
 
-                CoverPad.SetActive(false);
-                GamePad.SetActive(false);
+                SwitchActivePad(SelectLevelPad);
                 break;
 
             case UIState.InGame:
 
-                GamePad.SetActive(true);
+                SwitchActivePad(GamePad);
 
-                CoverPad.SetActive(false);
-                SelectCoursePad.SetActive(false);
                 break;
 
             // case UIState.Loading:
@@ -108,5 +109,12 @@ public class PadManager : MonoBehaviour
             case UIState.PlayerDisconnected:
                 break;
         }
+    }
+
+    void SwitchActivePad(GameObject padToShow)
+    {
+        currentActivePad.SetActive(false);
+        padToShow.SetActive(true);
+        currentActivePad = padToShow;
     }
 }

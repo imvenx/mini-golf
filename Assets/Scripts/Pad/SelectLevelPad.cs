@@ -1,6 +1,3 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using ArcanepadSDK.Models;
 using UnityEngine;
 using UnityEngine.UI;
@@ -16,10 +13,7 @@ public class SelectLevelPad : MonoBehaviour
         ReadyButton = transform.Find("ReadyButton").GetComponent<Button>();
         WaitButton = transform.Find("WaitButton").GetComponent<Button>();
         BackToCoverButton = transform.Find("BackToCoverButton").GetComponent<Button>();
-    }
 
-    void Start()
-    {
         ReadyButton.onClick.AddListener(() => SetPlayerStateReady());
         WaitButton.onClick.AddListener(() => SetPlayerStateWait());
 

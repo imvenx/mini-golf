@@ -9,6 +9,7 @@ public class CoverPad : MonoBehaviour
     void Start()
     {
         StartButton = transform.Find("StartButton").GetComponent<Button>();
+
         StartButton.onClick.AddListener(() =>
         {
             Arcane.Msg.EmitToViews(new ArcaneBaseEvent("CoverStartButtonPress"));
