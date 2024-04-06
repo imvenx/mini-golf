@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using ArcanepadSDK.Models;
 using ArcanepadSDK;
 using System.Linq;
+using System.Collections;
 
 public class ViewManager : MonoBehaviour
 {
@@ -13,6 +14,8 @@ public class ViewManager : MonoBehaviour
     public static List<Player> players = new List<Player>();
     private LevelLoader levelLoader;
     private GameView gameView;
+    private GameObject currentActiveView;
+    private GameObject transitionAnimPanel;
 
     async void Awake()
     {
@@ -21,11 +24,14 @@ public class ViewManager : MonoBehaviour
         canvas = GameObject.Find("Canvas");
         coverView = canvas.transform.Find("coverView").GetComponent<CoverView>();
         selectLevelView = canvas.transform.Find("selectLevelView").GetComponent<SelectLevelView>();
+        transitionAnimPanel = canvas.transform.Find("TransitionAnimPanel").gameObject;
         gameView = GetComponent<GameView>();
 
         levelLoader = transform.GetComponent<LevelLoader>();
 
         coverView.gameObject.SetActive(true);
+        currentActiveView = coverView.gameObject;
+
 
         Arcane.Init();
         var initialState = await Arcane.ArcaneClientInitialized();
@@ -104,16 +110,11 @@ public class ViewManager : MonoBehaviour
         {
             case UIState.CoverView:
 
-                coverView.gameObject.SetActive(true);
-                selectLevelView.gameObject.SetActive(false);
-
+                SwitchActivePanel(true, coverView.gameObject, currentActiveView);
                 break;
 
             case UIState.SelectLevelView:
-
-                coverView.gameObject.SetActive(false);
-                selectLevelView.gameObject.SetActive(true);
-
+                SwitchActivePanel(true, selectLevelView.gameObject, currentActiveView);
                 break;
 
             case UIState.InGame:
@@ -128,7 +129,51 @@ public class ViewManager : MonoBehaviour
                 break;
 
         }
+    }
 
+    // void SwitchActivePanel(bool playTransitionAnim, GameObject panelToShow, GameObject panelToHide)
+    // {
+    //     if (playTransitionAnim)
+    //     {
+    //         transitionAnimPanel.SetActive(true);
+    //         transitionAnimPanel.GetComponent<Animation>().Play();
+    //     }
+
+    //     panelToHide.SetActive(false);
+    //     panelToShow.SetActive(true);
+    //     currentActiveView = panelToShow;
+    // }
+
+    public void SwitchActivePanel(bool playTransitionAnim, GameObject panelToShow, GameObject panelToHide)
+    {
+        if (playTransitionAnim)
+        {
+            StartCoroutine(PlayTransitionAndSwitch(panelToShow, panelToHide));
+        }
+        else
+        {
+            panelToHide.SetActive(false);
+            panelToShow.SetActive(true);
+            currentActiveView = panelToShow;
+        }
+    }
+
+    private IEnumerator PlayTransitionAndSwitch(GameObject panelToShow, GameObject panelToHide)
+    {
+        transitionAnimPanel.SetActive(true);
+        Animation anim = transitionAnimPanel.GetComponent<Animation>();
+
+        anim.Play();
+
+        yield return new WaitForSeconds(anim.clip.length / 2);
+
+        panelToHide.SetActive(false);
+        panelToShow.SetActive(true);
+        currentActiveView = panelToShow;
+
+        yield return new WaitForSeconds(anim.clip.length / 2);
+
+        transitionAnimPanel.SetActive(false);
     }
 }
 

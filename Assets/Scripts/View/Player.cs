@@ -19,13 +19,13 @@ public class Player : MonoBehaviour
         pad.On("PlayerReady", (ArcaneBaseEvent e) =>
         {
             isReady = true;
-            PlayerReadyStateChange.Invoke(this, isReady);
+            PlayerReadyStateChange?.Invoke(this, isReady);
         });
 
         pad.On("PlayerWait", (ArcaneBaseEvent e) =>
         {
             isReady = false;
-            PlayerReadyStateChange.Invoke(this, isReady);
+            PlayerReadyStateChange?.Invoke(this, isReady);
         });
 
         // pad.On("QuitLevel", (ArcaneBaseEvent e) =>

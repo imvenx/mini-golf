@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using ArcanepadSDK.Models;
 using ArcanepadSDK.Types;
 using UnityEngine;
@@ -17,6 +18,7 @@ public class PadManager : MonoBehaviour
     public Button BackToCoverButton;
     public Button QuitGameButton;
     private GameObject currentActivePad;
+    private GameObject transitionAnimPanel;
     async void Start()
     {
         DontDestroyOnLoad(this);
@@ -27,6 +29,7 @@ public class PadManager : MonoBehaviour
         CoverPad = Pads.transform.Find("CoverPad").gameObject;
         SelectLevelPad = Pads.transform.Find("SelectLevelPad").gameObject;
         GamePad = Pads.transform.Find("GamePad").gameObject;
+        transitionAnimPanel = canvas.transform.Find("TransitionAnimPanel").gameObject;
 
         CoverPad.gameObject.SetActive(true);
         currentActivePad = CoverPad;
@@ -89,17 +92,17 @@ public class PadManager : MonoBehaviour
         {
             case UIState.CoverView:
 
-                SwitchActivePad(CoverPad);
+                SwitchActivePanel(true, CoverPad, currentActivePad);
                 break;
 
             case UIState.SelectLevelView:
 
-                SwitchActivePad(SelectLevelPad);
+                SwitchActivePanel(true, SelectLevelPad, currentActivePad);
                 break;
 
             case UIState.InGame:
 
-                SwitchActivePad(GamePad);
+                SwitchActivePanel(true, GamePad, currentActivePad);
 
                 break;
 
@@ -111,10 +114,35 @@ public class PadManager : MonoBehaviour
         }
     }
 
-    void SwitchActivePad(GameObject padToShow)
+    public void SwitchActivePanel(bool playTransitionAnim, GameObject panelToShow, GameObject panelToHide)
     {
-        currentActivePad.SetActive(false);
-        padToShow.SetActive(true);
-        currentActivePad = padToShow;
+        if (playTransitionAnim)
+        {
+            StartCoroutine(PlayTransitionAndSwitch(panelToShow, panelToHide));
+        }
+        else
+        {
+            panelToHide.SetActive(false);
+            panelToShow.SetActive(true);
+            currentActivePad = panelToShow;
+        }
+    }
+
+    private IEnumerator PlayTransitionAndSwitch(GameObject panelToShow, GameObject panelToHide)
+    {
+        transitionAnimPanel.SetActive(true);
+        Animation anim = transitionAnimPanel.GetComponent<Animation>();
+
+        anim.Play();
+
+        yield return new WaitForSeconds(anim.clip.length / 2);
+
+        panelToHide.SetActive(false);
+        panelToShow.SetActive(true);
+        currentActivePad = panelToShow;
+
+        yield return new WaitForSeconds(anim.clip.length / 2);
+
+        transitionAnimPanel.SetActive(false);
     }
 }
