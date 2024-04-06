@@ -136,7 +136,7 @@ public class ViewManager : MonoBehaviour
 
             case UIState.InGame:
 
-                SwitchActivePanel(false, null, currentActiveView);
+                SwitchActivePanel(true, null, currentActiveView);
                 break;
 
             case UIState.Loading:
