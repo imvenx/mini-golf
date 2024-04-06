@@ -12,6 +12,7 @@ public class PadManager : MonoBehaviour
     public GameObject CoverPad;
     public GameObject SelectLevelPad;
     public GameObject GamePad;
+    public GameObject loadingPad;
 
     public Button ReadyButton;
     public Button WaitButton;
@@ -29,6 +30,7 @@ public class PadManager : MonoBehaviour
         CoverPad = Pads.transform.Find("CoverPad").gameObject;
         SelectLevelPad = Pads.transform.Find("SelectLevelPad").gameObject;
         GamePad = Pads.transform.Find("GamePad").gameObject;
+        loadingPad = Pads.transform.Find("LoadingPad").gameObject;
         transitionAnimPanel = canvas.transform.Find("TransitionAnimPanel").gameObject;
 
         CoverPad.gameObject.SetActive(true);
@@ -103,11 +105,11 @@ public class PadManager : MonoBehaviour
             case UIState.InGame:
 
                 SwitchActivePanel(true, GamePad, currentActivePad);
-
                 break;
 
-            // case UIState.Loading:
-            //     break;
+            case UIState.Loading:
+                SwitchActivePanel(true, loadingPad, currentActivePad);
+                break;
 
             case UIState.PlayerDisconnected:
                 break;

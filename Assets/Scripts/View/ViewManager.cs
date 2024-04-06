@@ -4,12 +4,14 @@ using ArcanepadSDK.Models;
 using ArcanepadSDK;
 using System.Linq;
 using System.Collections;
+using System;
 
 public class ViewManager : MonoBehaviour
 {
     private GameObject canvas;
     private static CoverView coverView;
     private static SelectLevelView selectLevelView;
+    private static GameObject loadingView;
     private GameObject playerPrefab;
     public static List<Player> players = new List<Player>();
     private LevelLoader levelLoader;
@@ -22,8 +24,9 @@ public class ViewManager : MonoBehaviour
         playerPrefab = Resources.Load<GameObject>("Player");
 
         canvas = GameObject.Find("Canvas");
-        coverView = canvas.transform.Find("coverView").GetComponent<CoverView>();
-        selectLevelView = canvas.transform.Find("selectLevelView").GetComponent<SelectLevelView>();
+        coverView = canvas.transform.Find("CoverView").GetComponent<CoverView>();
+        selectLevelView = canvas.transform.Find("SelectLevelView").GetComponent<SelectLevelView>();
+        loadingView = canvas.transform.Find("LoadingView").gameObject;
         transitionAnimPanel = canvas.transform.Find("TransitionAnimPanel").gameObject;
         gameView = GetComponent<GameView>();
 
@@ -44,17 +47,31 @@ public class ViewManager : MonoBehaviour
         coverView.CoverStartButtonPressed += OnCoverStartButtonPressed;
         selectLevelView.allPlayersReady += OnAllPlayersReady;
         gameView.QuitGameButtonPress += OnQuitGameButtonPress;
+        levelLoader.levelLoaded += OnLevelLoaded;
+        levelLoader.levelUnloaded += OnLevelUnloaded;
     }
+
+    private void OnLevelUnloaded()
+    {
+        RefreshUI(UIState.SelectLevelView);
+    }
+
+
+    private void OnLevelLoaded()
+    {
+        RefreshUI(UIState.InGame);
+    }
+
 
     private void OnQuitGameButtonPress()
     {
-        RefreshUI(UIState.SelectLevelView);
+        RefreshUI(UIState.Loading);
         levelLoader.UnloadLevel();
     }
 
     private void OnAllPlayersReady()
     {
-        RefreshUI(UIState.InGame);
+        RefreshUI(UIState.Loading);
         levelLoader.LoadLevel("Level_1");
     }
 
@@ -119,14 +136,15 @@ public class ViewManager : MonoBehaviour
 
             case UIState.InGame:
 
-                selectLevelView.gameObject.SetActive(false);
+                SwitchActivePanel(false, null, currentActiveView);
                 break;
 
-            // case UIState.Loading:
-            //     break;
-
-            case UIState.PlayerDisconnected:
+            case UIState.Loading:
+                SwitchActivePanel(true, loadingView.gameObject, currentActiveView);
                 break;
+
+                // case UIState.PlayerDisconnected:
+                //     break;
 
         }
     }
@@ -152,8 +170,8 @@ public class ViewManager : MonoBehaviour
         }
         else
         {
-            panelToHide.SetActive(false);
-            panelToShow.SetActive(true);
+            panelToHide?.SetActive(false);
+            panelToShow?.SetActive(true);
             currentActiveView = panelToShow;
         }
     }
@@ -167,8 +185,8 @@ public class ViewManager : MonoBehaviour
 
         yield return new WaitForSeconds(anim.clip.length / 2);
 
-        panelToHide.SetActive(false);
-        panelToShow.SetActive(true);
+        panelToHide?.SetActive(false);
+        panelToShow?.SetActive(true);
         currentActiveView = panelToShow;
 
         yield return new WaitForSeconds(anim.clip.length / 2);

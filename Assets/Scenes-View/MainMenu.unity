@@ -726,7 +726,7 @@ GameObject:
   - component: {fileID: 682034646}
   - component: {fileID: 682034649}
   m_Layer: 5
-  m_Name: selectLevelView
+  m_Name: SelectLevelView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -910,7 +910,7 @@ GameObject:
   - component: {fileID: 810226532}
   - component: {fileID: 810226531}
   m_Layer: 5
-  m_Name: loadingScreen
+  m_Name: LoadingView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -949,7 +949,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0, g: 0, b: 0, a: 0.78039217}
+  m_Color: {r: 0, g: 0, b: 0, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -1453,7 +1453,7 @@ GameObject:
   - component: {fileID: 1182238948}
   - component: {fileID: 1182238950}
   m_Layer: 5
-  m_Name: coverView
+  m_Name: CoverView
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

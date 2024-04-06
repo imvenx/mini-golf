@@ -33,7 +33,7 @@ public enum UIState
 {
     CoverView,
     SelectLevelView,
-    //  Loading,
+    Loading,
     PlayerDisconnected,
     InGame,
 }
