@@ -34,7 +34,7 @@ public class SelectLevelPad : MonoBehaviour
 
     void SetPlayerStateWait()
     {
-        Arcane.Msg.EmitToViews(new ArcaneBaseEvent("PlayerWait"));
+        Arcane.Msg?.EmitToViews(new ArcaneBaseEvent("PlayerWait"));
         WaitButton.gameObject.SetActive(false);
         ReadyButton.gameObject.SetActive(true);
     }

@@ -33,11 +33,7 @@ public class PadManager : MonoBehaviour
         loadingPad = Pads.transform.Find("LoadingPad").gameObject;
         transitionAnimPanel = canvas.transform.Find("TransitionAnimPanel").gameObject;
 
-        CoverPad.gameObject.SetActive(true);
         currentActivePad = CoverPad;
-
-        SelectLevelPad.SetActive(false);
-        GamePad.SetActive(false);
 
         // BackToCoverButton = SelectCoursePad.transform.Find("BackToCover").GetComponent<Button>();
         // ReadyButton = SelectCoursePad.transform.Find("Ready").GetComponent<Button>();
