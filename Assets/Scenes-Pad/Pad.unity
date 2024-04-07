@@ -377,6 +377,7 @@ MonoBehaviour:
   CoverPad: {fileID: 0}
   SelectLevelPad: {fileID: 0}
   GamePad: {fileID: 0}
+  loadingPad: {fileID: 0}
   ReadyButton: {fileID: 0}
   WaitButton: {fileID: 0}
   BackToCoverButton: {fileID: 0}
@@ -1251,6 +1252,14 @@ PrefabInstance:
       propertyPath: m_Name
       value: StartButton
       objectReference: {fileID: 0}
+    - target: {fileID: 7956156783911621245, guid: 62164b1fdae9e8b48b01a4f36e0a4002, type: 3}
+      propertyPath: m_Transition
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 7956156783911621245, guid: 62164b1fdae9e8b48b01a4f36e0a4002, type: 3}
+      propertyPath: m_SpriteState.m_PressedSprite
+      value: 
+      objectReference: {fileID: 21300000, guid: 7e01b0118748cf848a1f74500cc59bcf, type: 3}
     - target: {fileID: 8082220243784603129, guid: 62164b1fdae9e8b48b01a4f36e0a4002, type: 3}
       propertyPath: m_Type
       value: 0
